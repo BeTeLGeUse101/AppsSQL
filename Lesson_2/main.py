@@ -13,7 +13,7 @@ import dearpygui.dearpygui as dpg
 from tabulate import tabulate
 from config import host, password, user
 
-def tabulateQuery(rows):
+def tabulateQuery(rows, transform, width, height):
     # Формирование заголовков таблицы (названия столбцов)
     headers = rows[0].keys() if rows else []
 
@@ -23,7 +23,7 @@ def tabulateQuery(rows):
     # Форматирование результатов в виде таблицы
     table = tabulate(rows, headers, tablefmt="grid")
 
-    with dpg.window(label="table"):
+    with dpg.window(tag=transform, label=transform, width=400, height=200):
         with dpg.table(header_row=True):
             for header in headers:
                 dpg.add_table_column(label=header)
@@ -32,6 +32,7 @@ def tabulateQuery(rows):
                 with dpg.table_row():
                     for value in row:
                         dpg.add_text(str(value))
+    dpg.set_item_pos(transform, (width, height))
     print(table)
 
 def main():
@@ -83,7 +84,7 @@ def main():
             print("\nТаблица 'SALES':")
             cursor.execute("SELECT * FROM sales")
             rows = cursor.fetchall()
-            tabulateQuery(rows)
+            tabulateQuery(rows, "SALES", 0, 0)
 
             # Выборка по типу заказа
             print("\nВыборка по типу заказа:")
@@ -95,7 +96,7 @@ def main():
                         "END AS 'order type'" \
                         "FROM sales;")
             rows = cursor.fetchall()
-            tabulateQuery(rows)
+            tabulateQuery(rows, "Query from SALES", 400, 0)
 
             drom_query = "DROP TABLE IF EXISTS orders;"
             cursor.execute(drom_query)
@@ -121,7 +122,7 @@ def main():
             print("\nТаблица 'ORDERS':")
             cursor.execute("SELECT * FROM orders")
             rows = cursor.fetchall()
-            tabulateQuery(rows)
+            tabulateQuery(rows, "ORDERS", 0, 200)
 
             print("\nВыборка по полному статусу заказа:")
             cursor.execute("SELECT id," \
@@ -132,9 +133,9 @@ def main():
                         "END AS 'full_order_status'" \
                         "FROM orders;")
             rows = cursor.fetchall()
-            tabulateQuery(rows)
+            tabulateQuery(rows, "Query from ORDERS", 400, 200)
 
-            dpg.create_viewport(title="Custom title", width=800, height=600)
+            dpg.create_viewport(title="Custom title", width=850, height=450)
             dpg.setup_dearpygui()
             dpg.show_viewport()
             dpg.start_dearpygui()
