@@ -67,4 +67,14 @@ FROM staff;
 SELECT post, AVG(age) AS sum_age
 FROM staff
 GROUP BY post
-HAVING sum_age <= 30
+HAVING sum_age <= 30;
+
+-- * Внутри каждой должности вывести ТОП-2 по ЗП (2 самых высокооплачиваемых сотрудника по ЗП внутри каждой должности)
+SELECT firstname, post, salary
+FROM staff AS s1
+WHERE (
+  SELECT COUNT(*) 
+  FROM staff AS s2
+  WHERE s2.post = s1.post AND s2.salary >= s1.salary
+) <= 2
+ORDER BY post, salary DESC;
