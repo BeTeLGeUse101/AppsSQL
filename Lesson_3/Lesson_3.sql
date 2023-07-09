@@ -32,9 +32,39 @@ VALUES
  
 SELECT * FROM staff;
 
--- Отсортируйте данные по полю заработная плата (salary) в порядке: убывания; возрастания 
--- Выведите 5 максимальных заработных плат (saraly)
--- Посчитайте суммарную зарплату (salary) по каждой специальности (роst)
--- Найдите кол-во сотрудников с специальностью (post) «Рабочий» в возрасте от 24 до 49 лет включительно.
--- Найдите количество специальностей
--- Выведите специальности, у которых средний возраст сотрудников меньше 30 лет
+-- 1. Отсортируйте данные по полю заработная плата (salary) в порядке: убывания; возрастания
+SELECT salary
+FROM staff
+ORDER BY salary DESC;
+
+SELECT salary
+FROM staff
+ORDER BY salary;
+
+-- 2. Выведите 5 максимальных заработных плат (saraly)
+SELECT DISTINCT post, salary
+FROM staff
+ORDER BY salary DESC
+LIMIT 5;
+
+-- 3. Посчитайте суммарную зарплату (salary) по каждой специальности (роst)
+SELECT post, SUM(salary) AS summ_salary
+FROM staff
+GROUP BY post;
+
+-- 4. Найдите кол-во сотрудников с специальностью (post) «Рабочий» в возрасте от 24 до 49 лет включительно.
+SELECT COUNT(*) AS count_staff, post
+FROM staff
+WHERE age >= 24 AND age <= 49
+GROUP BY post
+HAVING post = 'Рабочий';
+
+-- 5. Найдите количество специальностей
+SELECT COUNT(DISTINCT post) AS count_post
+FROM staff;
+
+-- 6. Выведите специальности, у которых средний возраст сотрудников меньше 30 лет
+SELECT post, AVG(age) AS sum_age
+FROM staff
+GROUP BY post
+HAVING sum_age <= 30
