@@ -136,7 +136,19 @@ SELECT s.shopname, c.name
 FROM `shops` AS s
 JOIN (SELECT * FROM cats) AS c
 ON s.id = c.shops_id
-WHERE c.name = 'Murzik'
+WHERE c.name = 'Murzik';
 
 -- Вывести магазины, в которых НЕ продаются коты “Мурзик” и “Zuza”
+SELECT s.id, s.shopname
+FROM shops AS s
+LEFT JOIN cats AS c
+ON s.id = c.shops_id AND (c.name = 'Murzik' OR c.name = 'Zuza')
+WHERE c.id IS NULL;
+
 -- Вывести название и цену для всех анализов, которые продавались 5 февраля 2020 и всю следующую неделю.
+SELECT o.ord_id, a.an_name, a.an_price, o.ord_datetime
+FROM Orders AS o
+JOIN Analysis AS a
+ON o.ord_an = a.an_id
+WHERE o.ord_datetime >= '2020-02-05'
+ORDER BY o.ord_datetime
